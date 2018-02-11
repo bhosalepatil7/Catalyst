@@ -33,5 +33,9 @@ namespace Catalyst.Business.Model.ModProductMaster
         public int CreatedBy;
 
         public int UpdatedBy;
+
+        public bool IsSample;
+
+        public int ProductType;
     }
 }

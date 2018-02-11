@@ -4,6 +4,7 @@ using Catalyst.DataAccess.DataManagers.ModCurrencyMaster;
 using Catalyst.DataAccess.DataManagers.ModDiscountMaster;
 using Catalyst.DataAccess.DataManagers.ModPaperMaster;
 using Catalyst.DataAccess.DataManagers.ModProductMaster;
+using Catalyst.DataAccess.DataManagers.ModProductType;
 using Catalyst.DataAccess.DataManagers.ModSubCourseMaster;
 using Catalyst.DataAccess.DataManagers.ModSubjectMaster;
 using Catalyst.DataAccess.DataManagers.ModTopicMaster;
@@ -43,7 +44,8 @@ namespace CatalystClientUI
             obj.TopicID = Convert.ToInt16(ddlTopic.SelectedValue);
             obj.Price = Convert.ToDouble("0" + txtPrice.Text);
             obj.BaseCurrency = ddlCurrency.SelectedValue;
-
+            obj.ProductType = Convert.ToInt16('0' + ddlProductType.SelectedValue);
+            obj.IsSample = chkSample.Checked;
             if (DateTime.TryParseExact(txtValidFrom.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
                 obj.ValidFrom = dt;
             else
@@ -87,7 +89,7 @@ namespace CatalystClientUI
 
         protected void btnClear_Click(object sender, EventArgs e)
         {
-
+            Clear();
         }
 
         protected void grdProductMaster_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
@@ -110,6 +112,8 @@ namespace CatalystClientUI
             txtDescription.Text = ((Label)grid.FindControl("lblDescription")).Text;
             txtPrice.Text = Convert.ToDouble(((Label)grid.FindControl("lblPrice")).Text).ToString();
             ddlCurrency.SelectedValue = ((Label)grid.FindControl("lblCurrencyID")).Text;
+            ddlProductType.SelectedValue = ((Label)grid.FindControl("lblProductTypeID")).Text;
+            chkSample.Checked = ((Label)grid.FindControl("lblSample")).Text.ToUpper().Equals("TRUE") ? true : false;
             if (DateTime.TryParseExact(((Label)grid.FindControl("lblValidFrom")).Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
                 txtValidFrom.Text = dt.ToString("dd/MM/yyyy");
             if (DateTime.TryParseExact(((Label)grid.FindControl("lblValidTo")).Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
@@ -129,6 +133,18 @@ namespace CatalystClientUI
                 Clear();
                 bind();
                 msgbox("Product Deleted successfully!!!");
+            }
+            if (e.CommandName == "Change_ProductType")
+            {
+                int rowIndex = ((GridViewRow)((LinkButton)e.CommandSource).NamingContainer).RowIndex;
+                GridViewRow grid = grdProductMaster.Rows[rowIndex];
+                int id = Convert.ToInt32(((Label)grid.FindControl("lblID")).Text);
+                int type = ((Label)grid.FindControl("lblSample")).Text.ToUpper().Equals("TRUE") ? 0 : 1;
+                obj1 = new ProductMasterDataManager();
+                obj1.UpdateProductType(id, type);
+                Clear();
+                bind();
+                msgbox("Product Type updated successfully!!!");
             }
         }
 
@@ -150,12 +166,14 @@ namespace CatalystClientUI
             txtDescription.Text = "";
             txtPrice.Text = "";
             ddlCurrency.SelectedValue = "0";
+            ddlProductType.SelectedValue = "0";
             ddlSubCourse.Items.Clear();
             ddlSubject.Items.Clear();
             ddlTopic.Items.Clear();
             ddlPaper.Items.Clear();
             ddlCourse.SelectedValue = "0";
             ddlDiscount.SelectedValue = "0";
+            chkSample.Checked = false;
         }
         private void bind()
         {
@@ -185,6 +203,13 @@ namespace CatalystClientUI
             ddlCurrency.DataValueField = "CurrencyID";
             ddlCurrency.DataBind();
             ddlCurrency.Items.Insert(0, new ListItem("Select", "0"));
+
+            ddlProductType.Items.Clear();
+            ddlProductType.DataSource = new ProductTypeMasterDataManager().GetProductTypeList();
+            ddlProductType.DataTextField = "ProductTypeName";
+            ddlProductType.DataValueField = "ProductTypeID";
+            ddlProductType.DataBind();
+            ddlProductType.Items.Insert(0, new ListItem("Select", "0"));
         }
         private void BindDropdown3(int id, string subject)
         {
@@ -287,6 +312,14 @@ namespace CatalystClientUI
                     lbl2.Text = Convert.ToString(dt.Rows[0]["CurrencyName"]);
                 }
 
+                lbl1 = (Label)e.Row.FindControl("lblProductTypeID");
+                lbl2 = (Label)e.Row.FindControl("lblProductTypeName");
+                dt = new ProductTypeMasterDataManager().GetProductTypeListWithID(Convert.ToInt16(lbl1.Text));
+                if (dt.Rows.Count > 0)
+                {
+                    lbl2.Text = Convert.ToString(dt.Rows[0]["ProductTypeName"]);
+                }
+
                 lbl1 = (Label)e.Row.FindControl("lblTopicID");
                 lbl2 = (Label)e.Row.FindControl("lblTopicName");
                 dt = new TopicMasterDataManager().GetTopicListWithID(Convert.ToInt16(lbl1.Text));
@@ -302,6 +335,13 @@ namespace CatalystClientUI
                 {
                     lbl2.Text = Convert.ToString(dt.Rows[0]["Name"]);
                 }
+
+                lbl1 = (Label)e.Row.FindControl("lblSample");//.Text.ToUpper().Equals("TRUE") ? true : false;
+                LinkButton btn = (LinkButton)e.Row.FindControl("btnUpdate_Product");
+                if (lbl1.Text.ToUpper().Equals("TRUE"))
+                    btn.Text = "Mark as Premium";
+                else
+                    btn.Text = "Mark as Sample";
                 dt = new SubjectMasterDataManager().GetSubCourseListWithSubjectID(Convert.ToInt16(((Label)e.Row.FindControl("lblSubjectID")).Text));
                 if (dt.Rows.Count > 0)
                 {
@@ -315,7 +355,6 @@ namespace CatalystClientUI
                     ((Label)e.Row.FindControl("lblCourse")).Text = Convert.ToString(dt.Rows[0]["CourseID"]);
                     ((Label)e.Row.FindControl("lblCourseName")).Text = Convert.ToString(dt.Rows[0]["Name"]);
                 }
-
             }
         }
 

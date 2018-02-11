@@ -48,6 +48,7 @@
     <Compile Include="ModMcqMaster\McqMasterDataManager.cs" />
     <Compile Include="ModPaperMaster\PaperMasterDataManager.cs" />
     <Compile Include="ModProductMaster\ProductMasterDataManager.cs" />
+    <Compile Include="ModProductType\ProductTypeMasterDataManager.cs" />
     <Compile Include="ModSubCourseMaster\SubCourseMasterDataManager.cs" />
     <Compile Include="ModCourseMaster\CourseMasterDataManager.cs" />
     <Compile Include="ModSubjectMaster\SubjectMasterDataManager.cs" />

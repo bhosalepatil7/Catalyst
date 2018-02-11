@@ -209,6 +209,21 @@
                                 <asp:RequiredFieldValidator CssClass="err-block" ID="RequiredFieldValidator5" runat="server" ErrorMessage="ValidTo Required" Display="Dynamic" ControlToValidate="txtValidTo" ValidationGroup="ValidationGroup" ForeColor="Red" Text="*"></asp:RequiredFieldValidator>
                             </div>
                         </div>
+                        <div class="form-group col-sm-6 col-md-6">
+                            <label class="col-sm-4 control-label text-right">IsSample</label>
+                            <div class="col-sm-2 control-block">
+                                <asp:CheckBox CssClass="form-control" ID="chkSample" runat="server"></asp:CheckBox>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-6">
+                            <label class="col-sm-4 control-label text-right">Product Type</label>
+                            <div class="col-sm-4 control-block">
+                                <asp:DropDownList CssClass="form-control" ID="ddlProductType" runat="server" AppendDataBoundItems="False"></asp:DropDownList>
+                            </div>
+                            <div class="col-sm-4 control-block">
+                                <asp:RequiredFieldValidator CssClass="err-block" ID="RequiredFieldValidator11" runat="server" ErrorMessage="Product Type Required" Display="Dynamic" ControlToValidate="ddlProductType" ValidationGroup="ValidationGroup" ForeColor="Red" Text="*" InitialValue="0"></asp:RequiredFieldValidator>
+                            </div>
+                        </div>
                         <%--<div class="form-group col-sm-6 col-md-12">
                     <label class="col-sm-4 control-label text-right">Visible</label>
                     <div class="col-sm-1 control-block">
@@ -297,6 +312,12 @@
                                     <asp:Label ID="lblCurrencyName" runat="server" Text=""></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
+                            <asp:TemplateField HeaderText="ProductType">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblProductTypeID" runat="server" Text='<%#Eval("ProductType") %>' Visible="false"></asp:Label>
+                                    <asp:Label ID="lblProductTypeName" runat="server" Text=""></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                             <asp:TemplateField HeaderText="Valid From">
                                 <ItemTemplate>
                                     <asp:Label ID="lblValidFrom" runat="server" Text='<%#Eval("ValidFrom","{0:dd/MM/yyyy}") %>'></asp:Label>
@@ -305,6 +326,11 @@
                             <asp:TemplateField HeaderText="Valid To">
                                 <ItemTemplate>
                                     <asp:Label ID="lblValidTo" runat="server" Text='<%#Eval("ValidUpto","{0:dd/MM/yyyy}") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="IsSample" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblSample" runat="server" Text='<%#Eval("IsSample") %>'></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <%--<asp:TemplateField HeaderText="Visible">
@@ -316,7 +342,10 @@
                                 <ItemTemplate>
                                     <span onclick="return confirm('Are you sure want to delete?')">
                                         <asp:LinkButton ID="btnDelete_Product" runat="server" CausesValidation="False" CommandName="Delete_Product"
-                                            CommandArgument='<%#Eval("ProductID") %>'>Delete</asp:LinkButton></span>
+                                            CommandArgument='<%#Eval("ProductID") %>'>Delete</asp:LinkButton></span>|
+                                    <span onclick="return confirm('Are you sure want to change product type?')">
+                                        <asp:LinkButton ID="btnUpdate_Product" runat="server" CausesValidation="False" CommandName="Change_ProductType"
+                                            CommandArgument='<%#Eval("ProductID") %>' Text="Product"></asp:LinkButton></span>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>

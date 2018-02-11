@@ -45,6 +45,7 @@
     <Compile Include="ModMcqMaster\McqMaster.cs" />
     <Compile Include="ModPaperMaster\PaperMaster.cs" />
     <Compile Include="ModProductMaster\ProductMaster.cs" />
+    <Compile Include="ModProductType\ProductType.cs" />
     <Compile Include="ModSubCourseMaster\SubCourseMaster.cs" />
     <Compile Include="ModCourseMaster\CourseMaster.cs" />
     <Compile Include="ModSubjectMaster\SubjectMaster.cs" />

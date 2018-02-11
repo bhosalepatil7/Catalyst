@@ -36,7 +36,7 @@ namespace Catalyst.DataAccess.DataManagers.ModProductMaster
             {
                 throw;
             }
-        }             
+        }
         public void AddProductDetail(ProductMaster obj)
         {
             try
@@ -55,7 +55,9 @@ namespace Catalyst.DataAccess.DataManagers.ModProductMaster
                         new SqlParameter("@ValidFrom",obj.ValidFrom), 
                         new SqlParameter("@ValidUpto",obj.ValidUpto), 
                         new SqlParameter("@CreatedBy",obj.CreatedBy),
-                        new SqlParameter("@UpdatedBy",obj.UpdatedBy)
+                        new SqlParameter("@UpdatedBy",obj.UpdatedBy),                        
+                        new SqlParameter("@IsSample",obj.IsSample.Equals(true)?1:0),
+                        new SqlParameter("@ProductType",obj.ProductType)
                 };
                 DBOperate.ExecuteProcedureWithOutReturn("usp_AddProduct", parameter);
             }
@@ -83,7 +85,9 @@ namespace Catalyst.DataAccess.DataManagers.ModProductMaster
                         new SqlParameter("@ValidFrom",obj.ValidFrom), 
                         new SqlParameter("@ValidUpto",obj.ValidUpto), 
                         new SqlParameter("@CreatedBy",obj.CreatedBy),
-                        new SqlParameter("@UpdatedBy",obj.UpdatedBy)
+                        new SqlParameter("@UpdatedBy",obj.UpdatedBy),                        
+                        new SqlParameter("@IsSample",obj.IsSample.Equals(true)?1:0),
+                        new SqlParameter("@ProductType",obj.ProductType)
                 };
                 DBOperate.ExecuteProcedureWithOutReturn("usp_UpdateProduct", parameter);
             }
@@ -101,6 +105,23 @@ namespace Catalyst.DataAccess.DataManagers.ModProductMaster
                         new SqlParameter("@ProductID",id)                                            
                 };
                 DBOperate.ExecuteProcedureWithOutReturn("usp_DeleteProduct", parameter);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public void UpdateProductType(int id, int type)
+        {
+            try
+            {
+                SqlParameter[] parameter = new SqlParameter[]
+                {
+                        new SqlParameter("@ProductID",id),   
+                        new SqlParameter("@IsSample",type)                    
+                };
+                DBOperate.ExecuteProcedureWithOutReturn("usp_UpdateProductType", parameter);
             }
             catch
             {
